@@ -1,0 +1,177 @@
+\documentclass{article}
+
+\usepackage[tight]{subfigure}
+\usepackage[dvips]{color}
+\usepackage[table]{xcolor}
+
+\usepackage[unicode, bookmarks=false]{hyperref}
+\usepackage{amsfonts, amsthm, graphicx, bbm}
+
+%------- Some definitions -----------------------------------------------------
+\def\note#1{\textcolor{red}{({\bf note:} \em\small #1)}}
+\def\question#1{\textcolor{blue}{\em\small #1?}}
+
+
+\def\eq#1{Eq.~(\ref{#1})}
+\def\eqs#1#2{Eq.~(\ref{#1})--(\ref{#2})}
+\def\fig#1{Figure~\ref{#1}}
+\def\tabl#1{Table~\ref{#1}}
+\def\alg#1{Algorithm~\ref{#1}}
+\def\se#1{Section~\ref{#1}}
+\def\vect#1{\mbox{$\bf #1$}}
+\def\mx#1{\mbox{$\bf #1$}}
+
+\newcommand{\eg}{{\em e.g.\ }}
+\newcommand{\ie}{{\em i.e.\ }}
+\newcommand{\etal}{ {\em et al.\ }}
+
+
+\title{TITLE}
+\author{Authors}
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+
+ABSTRACT
+\end{abstract}
+
+\section{Introduction}\label{sec:1}
+
+\noindent\textbf{Winning percentage.}
+
+\noindent\textbf{Rating percentage index.}
+
+\noindent\textbf{Least squares method.}
+
+\noindent\textbf{Colley method.}
+
+\noindent\textbf{Keener method.}
+
+\noindent\textbf{\'El\H{o} method.}
+
+\noindent\textbf{PageRank method.}
+
+\section{Related work}
+
+\section{Ranking methods}
+
+In this section, we give a short description of the ranking methods we will use. The methods will be compared in Sec. \ref{sec: Results}. A more detailed introduction about ranking methods, we refer to \cite{} and \cite{}. Before going into the details, we need some definitions.
+
+Let $V=(1, \dots, n)$ be the set of $n$ teams to be rated and let $R$ be the number of rounds in a competition of the teams in $V$. After round $r$ ($r=1, \dots, R$), a \textit{rating} $\phi^{r}: V \rightarrow \mathbb{R}$ assigns a score to each team which we call quantitative ``strength". A ranking $\sigma: V\rightarrow V$ is an ordering of the teams, which we can simply obtain from a rating on $V$ by sorting. For rating and ranking the teams, we consider the following two data sets: (i) the game results as win, lose or draw; (ii) the final scores of the games.
+
+Let us define the following matrices $W, D, S \in \mathbb{R}^{n \times n}$ as
+\begin{equation}\label{eq: Wmatrix}
+W_{ij}=\#\{i \textrm{ won against } j\},
+\end{equation}
+\begin{equation}\label{eq: Dmatrix}
+D_{ij}=\#\{\textrm{draws between } i \textrm{ and } j\},
+\end{equation}
+\begin{equation}\label{eq: Smatrix}
+S_{ij}=\sum_{\textrm{game btwn } i \textrm{ and } j} \frac{\# \textrm{ points } i \textrm{ scored ag/ } j}{\textrm{total points scored}}.
+\end{equation}
+Note, that $W$ is obtained by the (i) data set, while $S$ is obtained by the (ii) data set. In eq. \ref{eq: Smatrix} we take $1/2$ if the outcome of a game is $0:0$. The elements of the vectors $\vect{w}=W\mathbb{\vect{1}}$, $\vect{l}=W^{t}\mathbb{\vect{1}}$, $\vect{d}=D\mathbb{\vect{1}}$  and $\vect{t}=(W+W^{t}+D)\mathbb{\vect{1}}$ are the number of wins, loses, draws and total number of games played by team $i$ ($i=1\dots, n$), respectively. Since each game is either a win, a lose, or a draw, thus $\vect{t}=\vect{w}+\vect{l}+\vect{d}$. We define $T=diag(\vect{t_i})$ that is the diagonal matrix with entries $T_{ii}=t_i$ ($i=1\dots, n$). Similarly, we define the vectors $\vect{s}=S\mathbb{\vect{1}}$, $\vect{u}=S^{t}\mathbb{\vect{1}}$, and it is easy to see, that $\vect{s}+\vect{u}=\vect{t}$
+
+
+
+\subsection{Winning percentage (WP)}
+The winning percentage of a team $i$ after round $r$ is simply defined as $\phi^{r}_{WP, i}= (w_i+\kappa d_i)/t_i$, where $\kappa$ is parameter between $0$ and $1$ and can be interpreted as the ``value" of a draw. For example, we take $\kappa=1/3$, it refers that that the value of a draw is one third of the value of a win. The vector of winning percentages after round $r$ can be computed as 
+\begin{equation}\label{eq: wp}
+\phi^{r}_{WP}=T^{-1}(\vect{w}+\kappa\vect{d}).
+\end{equation}
+By considering the scores of of the games (i.e. by using the data set (ii)), a similar quantity can be calculated as
+\begin{equation}\label{eq: wpS}
+\phi^{r}_{WP-S}=T^{-1}\vect{s}.
+\end{equation}
+We highlight, that the methods \ref{eq: wp} and \ref{eq: wpS} do not take into consideration the strength of the opponent teams, only the outcome of the single games counts.
+
+\subsection{Rating percentage index (RPI)}
+
+The Rating Percentage index takes into account the WPs of its opponents, and its opponents' opponents \cite{}. The average winning percentage of team $i$'s opponents after round $r$ is calculated as
+\begin{equation}\label{eq: avg-WP}
+\langle N^r(i) \textrm{ winning percentage}  \rangle = \frac{1}{t_i}\sum_{j} (W_{ij}+W_{ji}+D_{ij})\phi^{r}_{WP, j},
+\end{equation}
+where $N^r(i)$ denotes the set of team previous opponents after round $r$. We obtain that the vector of the average opponents' winning percentages is $T^{-1}(W+W^t+D)\phi^{r}_{WP}$. The winning percentages of the opponents' opponents can be calculated as $T^{-1}(W+W^t+D)^2\phi^{r}_{WP}$ and then, after round $r$, RPI vector is calculated as the following weighted average:
+\begin{equation}\label{eq: rpi}
+\phi^{r}_{RPI}=\frac{1}{4}\phi^{r}_{WP}+\frac{1}{2}T^{-1}(W+W^t+D)\phi^{r}_{WP}+\frac{1}{4}T^{-1}(W+W^t+D)^2\phi^{r}_{WP},
+\end{equation}
+and similarly, in case of the more detailed data set (ii)
+\begin{equation}\label{eq: rpiS}
+\phi^{r}_{RPI}=\frac{1}{4}\phi^{r}_{WP-S}+\frac{1}{2}T^{-1}(W+W^t+D)\phi^{r}_{WP-S}+\frac{1}{4}T^{-1}(W+W^t+D)^2\phi^{r}_{WP-S}
+\end{equation}
+
+\subsection{Massey least squares method (M)}
+
+The only statistics is used by Massey's least squares method \cite{} are the number of wins and losses of each time. The rating of the teams after round $r$ is obtained by the solution of the linear system
+\begin{equation}\label{eq: Mas}
+M\phi^{r}_{M}=\vect{w}-\vect{l}
+\end{equation}
+where $M=T-W-W^t-D$ contains the total number of games of the teams in the diagonal, and an $(i,j)$ entry of it contains the number of games played between teams $i$ and $j$. The method naturally incorporates with draws, since a draw between two teams increases $M_{ij}$ and $M_{ji}$ by one, while the right hand-side of eq. \ref{eq: Mas} remains unchanged. Since $rank(M)<n$, the linear system \ref{eq: Mas} does not have a unique solution. To overcome this problem, one possible solution is to replace any row in $M$ with a row with all ones and the corresponding entry of $w-l$ with zero.
+
+
+\subsection{Colley method (C)}
+
+The Colley method is also a modification of the least squares method by using an observation called Laplace’s rule of
+succession (see \cite, page 148) which states, that if one observed $k$ successes out of $r$ attempts, then $(k+1)/(r+1)$ is better estimation for the next event to be success than $k/n$. The rating vector of the teams is the solution of the linear system
+\begin{equation}\label{eq: Col}
+C\phi^{r}_{C}=\vect{b},
+\end{equation}
+where $C=M+2I$ (here, $I$ is the identity matrix) and $\vect{b}=\mathbb{\vect{1}}+1/2(\vect{w}-\vect{l})$. It can be easily seen that the linear system \ref{eq: Col} always has a unique solution. 
+
+\subsection{Keener method (K)}
+
+Keener's method is a so-called spectral rating method which uses the Perron-Forbenius eigenvector for the rating and (after round $r$) it is given by the solution of the eigenvalue equation
+\begin{equation}\label{eq: Ken}
+T^{-1}(W+\kappa D)\phi^{r}_{K}=\lambda \phi^{r}_{K}
+\end{equation}
+in case when the scores are not considered. In eq. \ref{eq: Ken}, $\lambda$ is the dominant eigenvalue of the matrix $T^{-1}(W+\kappa D$ and it exists for a matrix with non-negative entries such that any other eigenvalue is smaller in absolute value. The corresponding eigenvector (called the Perron-Frobenius eigenvector) has non-negative entries and now it gives the rating of the teams.
+
+Originally, the method was defined for the case when we consider the scores of the games. The Keener matrix, also based on the Laplace's rule of succession, is defined as
+\begin{equation}\label{eq: K}
+K_{ij}=h\bigg(\frac{S_{ij}+1}{S_{ij}+S_{ji}+1}\bigg)
+\end{equation}
+where $h$ is a skewing function helping to reduce the difference between the upper and lower ends of the rating. We use the original function defined by Kenner, namely,
+\begin{equation}\label{eq: h}
+h(x)=\frac{1}{2}+\frac{1}{2}\textrm{sgn}(x-\frac{1}{2})\sqrt{|2x-1|}
+\end{equation}
+The Keener rating vector of the teams is given by the solution of the equation
+\begin{equation}\label{eq: Ken}
+T^{-1}K\phi^{r}_{K-S}=\lambda \phi^{r}_{K-S}
+\end{equation}
+
+\subsection{\'El\H{o} method (E)}
+
+Let $\phi^{r-1}_{E,i}$ and $\phi^{r-1}_{E,j}$ be the \'El\H{o} ratings of teams $i$ and $j$, resp, after round $r-1$. For each game in round $r$, the \'El\H{o} method computes the expected outcome of the game as a logistic function of the difference of the team ratings. This function is $L(x)=1/(1+10^{-x/\xi})$, where $\xi>0$ is a parameter and the expected outcome of the game between $i$ and $j$ in round $r$ is
+\begin{equation}\label{eq: Elo}
+E^r_{ij}=L(\phi^{r-1}_{E,i}-\phi^{r-1}_{E,j}).
+\end{equation}
+If we consider the outcomes of the matches just as win, lose or draw, 
+
+\subsection{PageRank method (PR)}
+
+\section{Forecasting}
+
+\subsection{The Bradley-Terry model}
+
+\subsection{Betting odds}
+
+\section{Results} \label{sec: Results}
+
+\subsection{Data set}
+
+\subsection{Comparison of the ranking methods}
+
+\subsection{Hypotheses testing}
+
+\section{Discussion}
+
+\section*{Acknowledgment}
+
+\bibliographystyle{acm}      % mathematics and physical sciences
+%\bibliographystyle{spphys}       % APS-like style for physics
+\bibliography{}{}   % name your BibTeX data base
+
+
+\end{document}
