@@ -32,7 +32,7 @@ function [betError ourError btError money betCount] = measure( leagueData, S, st
     for gameDay = startGameDay:lastGameDay
 
       
-        pi = PageRank( S{gameDay-1} );
+        pi = PageRank( S{gameDay-1}, teamList );
 %         pi = PageRank( W{gameDay-1} + params.drawWeight * D{gameDay-1} );
 
         if params.print
@@ -101,7 +101,7 @@ function [betError ourError btError money betCount] = measure( leagueData, S, st
                         
                     S2 = registerResult( S{gameDay-1}, team1Ix, team2Ix, g1, g2, 1, params );
                     
-                    pi2 = PageRank( S2 );
+                    pi2 = PageRank( S2,teamList );
                     
                     delta = computeDelta(pi, pi2) / normFactor;
                     

@@ -1,13 +1,28 @@
-function pi = PageRank(Z)
-%     k = 20;
-%     M = Z(1:k, 1:k);
-%     N = size( M, 1 );
-%     U = sum( M, 1 );
-%     lambda = 0.999999;
-% %     P = lambda * M * (1./diag(U)) + (1-lambda)/N*ones(size(M));
-% %     [V D] = eig( P );
-%     pi =  ( eye(N) - (lambda)* (M * diag(1./U)) ) \ (((1-lambda)/N) *ones(N,1));
-% end
+function pi = PageRank(Z,Y)
+    k = 20;
+    M = Z(1:k, 1:k);
+    N = size( M, 1 );
+    U = sum( M, 1 );
+    lambda = 0.999999;
+%     P = lambda * M * (1./diag(U)) + (1-lambda)/N*ones(size(M));
+%     [V D] = eig( P );
+    pi =  ( eye(N) - (lambda)* (M * diag(1./U)) ) \ (((1-lambda)/N) *ones(N,1));
+% Calculating rankings
+    [x,~]= sort(pi,'descend');
+    b=zeros(size(pi));
+
+    for i=1:length(pi)
+        for j=1:length(x)
+            if pi(i)== x(j)
+            b(i)=j;
+            break;
+            end
+        end
+    end
+% b is the ranking matrices
+% MasseyWinner = fprintf('The winning order is %s. \n',Y(b)');
+list = Y(b)'
+end
 % % 
 % 
 % 
@@ -75,9 +90,10 @@ function pi = PageRank(Z)
 % 
 % %Determine the maximum rating
 % [~,win] = max(MasseyRating);
-% 
+% list = Y(r)'
 % % Print out winning candidate
-% % MasseyWinner = fprintf('The winner is %s. \n',Y{1,win});
+% %  MasseyWinner = fprintf('The winning order is %s. \n',Y(r));
+% 
 % % 
 % % % The following outputs the entire rank vector
 % % fprintf('Ranking: \n');
@@ -160,7 +176,7 @@ function pi = PageRank(Z)
 % 
 % % Print out winning candidate
 % %  ColleyWinner = fprintf('The winner is %s. \n',r);
-% 
+%  list = Y(r)'
 % end
 
 
@@ -170,34 +186,35 @@ function pi = PageRank(Z)
 % % Data;
 % % S;
 % % Creating K matrix
-    S = Z;
-    [m,n] = size(S);
-
-    K = zeros(m,n);
-
-    for i= 1:m
-        for j=1:n
-
-%             if(S(i,j)==0)
-%                 K(i,j)=0;   % including ties  
-%             else 
-            x = (S(i,j) + 1)/ (S(i,j)+ S(j,i)+2);  
-            K(i,j)= 0.5 + (0.5* sign(x-0.5)* sqrt(abs(2*x -1))); 
-            end
-        end
-
-
-    % [S, V, D] = svd(K);
-    % K = Z;
-    [r, va] = eig(K);
-
-    [v12, loc]=max(max(va));
-
-    % disp('Team rating is');
-    [b, c]  =   sort(abs(r(:,loc)),1,'ascend'); % for geeting rating and ranking
-    % debug till this point
-    % fprintf('%d: %d',b,c)
-    %  disp(c);
-    pi = b;
-end 
+%     S = Z;
+%     [m,n] = size(S);
+% 
+%     K = zeros(m,n);
+% 
+%     for i= 1:m
+%         for j=1:n
+% 
+% %             if(S(i,j)==0)
+% %                 K(i,j)=0;   % including ties  
+% %             else 
+%             x = (S(i,j) + 1)/ (S(i,j)+ S(j,i)+2);  
+%             K(i,j)= 0.5 + (0.5* sign(x-0.5)* sqrt(abs(2*x -1))); 
+%         end
+%     end
+% 
+% 
+%     % [S, V, D] = svd(K);
+%     % K = Z;
+%     [r, va] = eig(K);
+% 
+%     [v12, loc]=max(max(va));
+% 
+%     % disp('Team rating is');
+%     [b, c]  =   sort(abs(r(:,loc)),1,'ascend'); % for geeting rating and ranking
+%     % debug till this point
+%     % fprintf('%d: %d',b,c)
+%     %  disp(c);
+%     pi = b;
+% list = Y(c)'
+% end 
 

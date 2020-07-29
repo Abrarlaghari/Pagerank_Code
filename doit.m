@@ -36,9 +36,13 @@ function [BT_W, BT_L, BT_T]= doit( league, year)
     numGameDays = length(gameDays);
 
 
-    startGameDay = 20;
-    lastGameDay = numGameDays;
-
+%     startGameDay = 20;
+%     lastGameDay = numGameDays;
+    
+    startGameDay = input('Please enter the firts game day')
+    lastGameDay = input('Please enter the last  game day')
+    
+    
 
     fprintf('Create matrices...' ); 
 %     fflush( stdout );
